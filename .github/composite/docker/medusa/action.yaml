@@ -36,5 +36,8 @@ runs:
       with:
         context: .
         push: true
-        tags: ${{ inputs.DOCKER_REPOSITORY }}:${{ inputs.DOCKER_TAG }}
+        platforms: linux/amd64,linux/arm64
+        tags: |
+          ${{ inputs.DOCKER_REPOSITORY }}:${{ inputs.DOCKER_TAG }}
+          ${{ inputs.DOCKER_REPOSITORY }}:latest
         file: apps/medusa/Dockerfile
