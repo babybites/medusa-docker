@@ -34,6 +34,7 @@ runs:
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
+        build-args: NODE_OPTIONS=--max-old-space-size=4096
         context: .
         push: true
         platforms: linux/amd64,linux/arm64
