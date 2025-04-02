@@ -39,5 +39,5 @@ jobs:
         uses: ./.github/composite/docker/medusa
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REPOSITORY: ghcr.io/${{ github.repository_owner }}/medusa2-starter/medusa
+          DOCKER_REPOSITORY: ghcr.io/${{ github.repository_owner }}/medusa-docker/medusa
           DOCKER_TAG: ${{ github.sha }}
