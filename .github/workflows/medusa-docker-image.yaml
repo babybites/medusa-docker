@@ -39,9 +39,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Medusa Docker
+      - name: Push Medusa Docker (AMD64)
         uses: ./.github/composite/docker/medusa
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_REPOSITORY: ghcr.io/${{ github.repository_owner }}/medusa-docker
-          DOCKER_TAG: ${{ github.sha }}
+          DOCKER_TAG: ${{ github.sha }}-amd64
+          PLATFORM: linux/amd64
+
+      - name: Push Medusa Docker (ARM64)
+        uses: ./.github/composite/docker/medusa
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_REPOSITORY: ghcr.io/${{ github.repository_owner }}/medusa-docker
+          DOCKER_TAG: ${{ github.sha }}-arm64
+          PLATFORM: linux/arm64
+          
+      - name: Create and Push Multi-Arch Manifest
+        run: |
+          docker manifest create ghcr.io/${{ github.repository_owner }}/medusa-docker:latest \
+            --amend ghcr.io/${{ github.repository_owner }}/medusa-docker:${{ github.sha }}-amd64 \
+            --amend ghcr.io/${{ github.repository_owner }}/medusa-docker:${{ github.sha }}-arm64
+
+          docker manifest push ghcr.io/${{ github.repository_owner }}/medusa-docker:latest
