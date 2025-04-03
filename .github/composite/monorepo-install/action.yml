@@ -51,7 +51,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: "**/node_modules"
-        key: yarn-nm-cache-${{ runner.os }}-${{ steps.yarn-config.outputs.CURRENT_NODE_VERSION }}-${{ steps.yarn-config.outputs.CURRENT_BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+        key: yarn-nm-cache-${{ runner.os }}-${{ runner.arch }}-${{ steps.yarn-config.outputs.CURRENT_NODE_VERSION }}-${{ steps.yarn-config.outputs.CURRENT_BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
     - name: ♻️ Restore yarn install state
       if: inputs.cache-install-state == 'true' && inputs.cache-node-modules == 'true'
@@ -63,7 +63,12 @@ runs:
 
     - name: 📥 Install dependencies
       shell: bash
-      run: yarn install --immutable --inline-builds
+      run: |
+        if [[ "$(uname -m)" == "aarch64" ]]; then
+          yarn install --immutable --network-timeout 1000000 --prefer-offline
+        else
+          yarn install --immutable --inline-builds
+        fi
       env:
         # Overrides/align yarnrc.yml options (v3, v4) for a CI context
         YARN_ENABLE_GLOBAL_CACHE: "false" # Use local cache folder to keep downloaded archives
