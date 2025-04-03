@@ -38,13 +38,15 @@ runs:
       with:
         context: .
         push: true
+        file: apps/medusa/Dockerfile
         platforms: linux/amd64
-        tags: ghcr.io/babybites/medusa-docker:${{ github.sha }}-amd64
+        tags: ${{ inputs.DOCKER_REPOSITORY }}:${{ github.sha }}-amd64
     
     - name: Build and Push ARM64
       uses: docker/build-push-action@v4
       with:
         context: .
         push: true
+        file: apps/medusa/Dockerfile
         platforms: linux/arm64
-        tags: ghcr.io/babybites/medusa-docker:${{ github.sha }}-arm64
+        tags: ${{ inputs.DOCKER_REPOSITORY }}:${{ github.sha }}-arm64
